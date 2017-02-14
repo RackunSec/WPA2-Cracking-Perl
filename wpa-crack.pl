@@ -12,7 +12,7 @@ my $wordlist = shift or die $usage;
 my $pcapFile = shift or die $usage;
 (my $bssidDec = $bssid) =~ s/://g; # used for hashing
 my ($nonce1,$nonce2,$essid,$pmk,$mic,$ptk,
- $err,$filter,$mac1,$mac2,$pke,$msg) = ("")x13;
+ $err,$filter,$mac1,$mac2,$pke,$msg) = ("")x13; # declare variables before using them
 my $pbkdf2 = Crypt::PBKDF2->new(
  hash_class => 'HMACSHA1', # HMAC-SHA1
  iterations => 4096, # key stretching
@@ -48,7 +48,7 @@ sub kill{ # if absolutely anything is missing
  die "Could not determine ",$_[0];
 }
 sub eapol{ # parse eapol packets called by pcap_loop:
-        my ($ud,$hdr,$pkt) = @_; # subtype of 8 is Beacon:
+ my ($ud,$hdr,$pkt) = @_; # subtype of 8 is Beacon:
  if(hex(unpack("x26 h2",$pkt)) == 8 && unpack("H*",substr($pkt,36,6)) eq $bssidDec){
   # Tagged parameters start on byte 63 (null byte), 
   #   and the first is SSID in a Beacon,
